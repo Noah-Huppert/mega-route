@@ -1,0 +1,15 @@
+FROM alpine:latest
+
+WORKDIR /tmp
+
+RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories
+RUN apk update
+# autoconf automake
+RUN apk add binutils curl make g++ perl libxml2-dev geos-dev postgresql postgresql-dev
+
+RUN curl http://postgis.net/stuff/postgis-3.0.1dev.tar.gz > postgis.tar.gz
+RUN tar -xzf postgis.tar.gz && rm postgis.tar.gz
+WORKDIR /tmp/postgis-3.0.1dev
+RUN make
+RUN make check
+RUN make install
